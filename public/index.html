@@ -2,60 +2,21 @@
 <html>
 <head>
 	<title>OnlineChat</title>
+	<script type="text/javascript" src='./script/http.js' defer></script>
+	<link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-	<div>
-		<input type="text" id='name' placeholder="Your name">
-		<input type="button" value='OK' id='nameSend'>
-	</div>
-	<ul id="messages"></ul>
-	<div>
-		<textarea name="" id="text" cols="30" rows="10"></textarea>
-		<input type="button" value="Send" id="textSend">
-	</div>
+	<container>
+		<div>
+			<input type="text" id='name' placeholder="Your name">
+			<input type="button" value='OK' id='nameSend'>
+		</div>
+		<ul id="messages"></ul>
+		<div>
+			<textarea name="" id="text" cols="30" rows="10"></textarea>
+			<input type="button" value="Send" id="textSend">
+		</div>
+		<a href="./index_socket.html"><h4>Socket method</h4></a>
+	</container>
 </body>
-<script type="text/javascript">
-	
-		getElems = (arg) => {let result = []; arg.split(' ').forEach((item) => result.push(document.getElementById(item))); return result};
-		let [nameButton,nameInput,messages,text,textSubmit] = getElems('nameSend name messages text textSend');
-		let userName = 'Anonymous';
-
-
-		nameButton.onclick = () => userName = nameInput.value || userName;
-
-		textSubmit.onclick = () => {ajaxRequest('/messages','POST',getData,{name: userName, text: text.value}); text.value = ''};
-
-		ajaxRequest = ( url = '/' , method = 'GET' , callback, data = {}) => {
-			let xmlHttp = new XMLHttpRequest();
-
-			xmlHttp.open(method, url, true);
-			xmlHttp.setRequestHeader('Content-Type', 'application/json');
-			xmlHttp.send(JSON.stringify(data));
-			xmlHttp.onreadystatechange = () => (xmlHttp.status == 200 && xmlHttp.readyState === 4) ? callback(xmlHttp.responseText) : {};
-		};
-
-		getData = () => {
-			ajaxRequest('/messages', 'GET', callback = function(msg){
-				msg = JSON.parse(msg);
-				messages.innerHTML = '';
-				for(let i in msg){
-					if(msg.hasOwnProperty(i)){
-						let el = document.createElement('li');
-						el.innerText = `${msg[i].name} : ${msg[i].text}`;
-						messages.appendChild(el)
-					}
-				}
-			})
-		}
-
-		setInterval(()=>{
-			getData();
-		}, 1000);
-	
-
-
-
-
-	
-</script>
 </html>
